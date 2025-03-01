@@ -1,0 +1,13 @@
+tqdm~=4.64.1
+aiohttp~=3.8.3
+joblib~=1.1.0
+beautifulsoup4~=4.11.1
+chromedriver_autoinstaller
+selenium~=4.6.0
+sodapy~=2.2.0
+aiofiles
+pandas
+numpy
+geopandas
+openpyxl
+xlrd

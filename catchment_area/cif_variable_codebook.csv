@@ -1,0 +1,99 @@
+TABLE,VARIABLE NAME,VARIABLE DEFINITION,ADDITIONAL INFORMATION,SOURCE,URL
+Sociodemographic,Total,Total Population,,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Under 18,Under 18 Years Old,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,18 to 64,18 to 64 Years Old,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Over 64,Over 64 Years Old,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Below 9th grade,Did Not Attend High School,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,High School,Graduated High School,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,College,Graduated College,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Advanced Degree,Completed a Graduate Degree,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,White,White (non-Hispanic),% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Black,Black (non-Hispanic),% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Hispanic,Hispanic,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Asian,Asian (non-Hispanic),% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Other Races,Other Non-Hispanic Race,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Sociodemographic,Urban Percentage,Urbanized Residents,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Insurance Coverage,Insured,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Medicaid Enrollment,Enrolled in Medicaid,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Gini Coefficient,Income Inequality (Gini Coefficient),,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Household Income,Household Income ($),,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Annual Labor Force Participation Rate,Annual Labor Force Participation,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Annual Unemployment Rate,Annual Unemployment Rate,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Below Poverty,Living Below Poverty,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Uninsured,Uninsured,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Vacancy Rate,Vacant Housing,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,No Vehicle,No Household Vehicle Access,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Rent Burden (40% Income),High Rent Burden,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Economic & Insurance,Received Public Assistance,Received TANF or SNAP Public Assistance,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Median Home Value,Median Home Value ($),,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Median Monthly Mortgage,Median Monthly Mortgage ($),,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Median Gross Rent,Median Gross Rent ($),,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Mobile Homes,Housing in Mobile Homes,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Multi-Unit Structures,Housing in Multi-Unit Structures,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Owner Occupied Housing,Owner-occupied Housing Units,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Crowded Housing,Crowded Homes,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,No Home Broadband,Homes without Broadband Internet,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Lack Complete Plumbing,Homes without Complete Plumbing,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Housing & Transportation,Single Parent Household,Single Parent Homes,% of households,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Lack English Prof,Lack Proficiency in English,% of population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Economic Segregation,Economic Segregation,"Proportion of population making >=$150,000 minus proportion of population making <$30,000","ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Racial Segregation,Racial Segregation,Proportion of population that is White minus proportion of population that is Black,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Racial Economic Segregation,Racial Economic Segregation,"Proportion of population that is White and makes >=$150,000 minus proportion of population that is Black and makes <$30,000","ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Gender Pay Gap,Gender Pay Gap,Dollars less the median Female makes for every $1 the median Male makes,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Uninsured Children,Children without Health Insurance,% of population under 19 years old,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Uninsured (Black),Black Population without Health Insurance,% of Black population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Uninsured (Hispanic),Hispanic Population without Health Insurance,% of Hispanic population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Living Below Poverty (Black),Black Population Living Below Poverty,% of Black population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Disparities,Living Below Poverty (Hispanic),Hispanic Population Living Below Poverty,% of Hispanic population,"ACS 5-Year, 2018 - 2022",https://data.census.gov/
+Risk Factor & Screening,Cancer Prevalence,History of Cancer Diagnosis,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Binge Drinking,Binge Drink,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Met Breast Screen,Met Breast Screening Recommendations,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,BMI Obese,Obese (BMI over 30),modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Currently Smoke,Currently Smoke (adults),modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Met Colon Screen,Met Colorectal Screening Recommendations,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Met Cervical Screen,"Had Pap Test in Last 3 Years, Age 21-64",modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,High BP,Have High Blood Pressure,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,BP Medicine,On Blood Pressure Medication,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Asthma,Diagnosed with Asthma,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,CHD,Have Coronary Heart Disease,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Recent Checkup,Had a Medical Checkup in the Last Year,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,COPD,Have COPD,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Recent Dentist,Had a Dental Visit in the Last Year,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Depression,Have Depression,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Diabetes DX,Diagnosed with Diabetes,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Bad Health,Report Fair or Poor Overall Health,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Kidney Disease,Have Chronic Kidney Disease,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Physically Inactive,Physical Inactive,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Poor Mental,Report Frequent Mental Health Distress,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Poor Physical,Report Frequent Physical Health Distress,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Sleep Debt,Sleep < 7 Hours a Night,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,Had Stroke,Had a Stroke,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Risk Factor & Screening,No Teeth,All Adult Teeth Lost,modeling estimates based on BRFSS,"CDC Places, 2022",https://www.cdc.gov/places/
+Food Desert,LILATracts Vehicle,Tracts that are Food Deserts,"low income, low access with vehicle definition","USDA ERS, 2019",https://www.ers.usda.gov/data-products/food-access-research-atlas/
+Environment,PWS Violations Since 2016,Public Water System Violations since 2016,number per county,"EPA, 2022",https://www.epa.gov/ground-water-and-drinking-water/safe-drinking-water-information-system-sdwis-federal-reporting
+Environment,Lead Paint,Housing Units Built Pre-1960,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Diesel PM,Diesel Particulate Matter (annual avg. mcg/m^3),,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Air Toxics Cancer,Lifetime Cancer Risk from Air Toxics (per 1 million people),,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Air Toxics Resp,Air Toxics Respiratory Hazard Index,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Toxics Release to Air,Toxic Releases to Air,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Traffic Proximity,Traffic Volume,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Water Discharge,Toxic Water Discharge,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Superfund Proximity,Superfund Proximity,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,RMP Proximity,Risk Management Plan Facility Proximity,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Hazardous Waste Proximity,Hazardous Waste Proximity,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Ozone,Annual Ozone Average (ppm),,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,Underground Storage Tanks,Underground Storage Tanks,,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Environment,PM25,Particulate Matter 2.5 (annual avg. mcg/m^3),,"EJScreen, 2023",https://www.epa.gov/ejscreen
+Cancer Incidence & Mortality,AAR,"Age-adjusted Rate per 100,000 Population",,"State Cancer Profiles, 2016-2020",https://statecancerprofiles.cancer.gov/index.html
+Cancer Incidence & Mortality,AAC,Average Annual Cases,only available on long datasets,"State Cancer Profiles, 2016-2020",https://statecancerprofiles.cancer.gov/index.html
+Facilities & Providers,Colon & Rectal Surgeon,Colon & Rectal Surgeons,,NPPES,https://nppes.cms.hhs.gov/#/
+Facilities & Providers,Gastroenterology,Gastroenterologists,,NPPES,https://nppes.cms.hhs.gov/#/
+Facilities & Providers,Obstetrics & Gynecology,Obstetricians & Gynecologists,,NPPES,https://nppes.cms.hhs.gov/#/
+Facilities & Providers,Mammography,Mammography Facility,,FDA MQSA Database,https://www.fda.gov/radiation-emitting-products/consumer-information-mqsa/search-certified-facility
+Facilities & Providers,Lung Cancer Screening,Lung Cancer Screening Facility,,American College of Radiology,https://www.acr.org/Clinical-Resources/Lung-Cancer-Screening-Resources/LCS-Locator-Tool
+Facilities & Providers,FQHC,Federally-Qualified Health Center,,HRSA,https://data.hrsa.gov/data/about
+Facilities & Providers,HPSA Federally Qualified Health Center Look a Like,Federally-Qualified Health Center Look-a-Like,,HRSA,https://data.hrsa.gov/data/about
+Facilities & Providers,HPSA Correctional Facility,Correctional Facility Clinic,,HRSA,https://data.hrsa.gov/data/about
+Facilities & Providers,HPSA Rural Health Clinic,Rural Health Clinic,,HRSA,https://data.hrsa.gov/data/about
+Facilities & Providers,Superfund Site,Superfund Site,,EPA Envirofacts,https://enviro.epa.gov/
+Facilities & Providers,Toxic Release Inventory Facility,Toxic Release Inventory Facility releasing OSHA-recognized carcinogen,,EPA Envirofacts,https://enviro.epa.gov/

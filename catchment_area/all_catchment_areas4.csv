@@ -1,0 +1,159 @@
+FIPS,County,State,name,name_short,designation
+11001,District of Columbia,DC,DMV,dmv,Not Applicable
+24001,Allegany,MD,DMV,dmv,Not Applicable
+24023,Garrett,MD,DMV,dmv,Not Applicable
+24017,Charles,MD,DMV,dmv,Not Applicable
+24033,Prince George's,MD,DMV,dmv,Not Applicable
+24003,Anne Arundel,MD,DMV,dmv,Not Applicable
+24037,St. Mary's,MD,DMV,dmv,Not Applicable
+24009,Calvert,MD,DMV,dmv,Not Applicable
+24019,Dorchester,MD,DMV,dmv,Not Applicable
+24041,Talbot,MD,DMV,dmv,Not Applicable
+24021,Frederick,MD,DMV,dmv,Not Applicable
+24043,Washington,MD,DMV,dmv,Not Applicable
+24027,Howard,MD,DMV,dmv,Not Applicable
+24031,Montgomery,MD,DMV,dmv,Not Applicable
+24510,Baltimore City,MD,DMV,dmv,Not Applicable
+24013,Carroll,MD,DMV,dmv,Not Applicable
+24005,Baltimore County,MD,DMV,dmv,Not Applicable
+24035,Queen Anne's,MD,DMV,dmv,Not Applicable
+24029,Kent,MD,DMV,dmv,Not Applicable
+24025,Harford,MD,DMV,dmv,Not Applicable
+24015,Cecil,MD,DMV,dmv,Not Applicable
+24039,Somerset,MD,DMV,dmv,Not Applicable
+24047,Worcester,MD,DMV,dmv,Not Applicable
+24045,Wicomico,MD,DMV,dmv,Not Applicable
+24011,Caroline,MD,DMV,dmv,Not Applicable
+51105,Lee,VA,DMV,dmv,Not Applicable
+51169,Scott,VA,DMV,dmv,Not Applicable
+51720,Norton,VA,DMV,dmv,Not Applicable
+51195,Wise,VA,DMV,dmv,Not Applicable
+51167,Russell,VA,DMV,dmv,Not Applicable
+51191,Washington,VA,DMV,dmv,Not Applicable
+51520,Bristol,VA,DMV,dmv,Not Applicable
+51027,Buchanan,VA,DMV,dmv,Not Applicable
+51051,Dickenson,VA,DMV,dmv,Not Applicable
+51077,Grayson,VA,DMV,dmv,Not Applicable
+51173,Smyth,VA,DMV,dmv,Not Applicable
+51185,Tazewell,VA,DMV,dmv,Not Applicable
+51021,Bland,VA,DMV,dmv,Not Applicable
+51035,Carroll,VA,DMV,dmv,Not Applicable
+51071,Giles,VA,DMV,dmv,Not Applicable
+51155,Pulaski,VA,DMV,dmv,Not Applicable
+51197,Wythe,VA,DMV,dmv,Not Applicable
+51640,Galax,VA,DMV,dmv,Not Applicable
+51750,Radford,VA,DMV,dmv,Not Applicable
+51063,Floyd,VA,DMV,dmv,Not Applicable
+51141,Patrick,VA,DMV,dmv,Not Applicable
+51121,Montgomery,VA,DMV,dmv,Not Applicable
+51067,Franklin County,VA,DMV,dmv,Not Applicable
+51161,Roanoke County,VA,DMV,dmv,Not Applicable
+51770,Roanoke City,VA,DMV,dmv,Not Applicable
+51775,Salem,VA,DMV,dmv,Not Applicable
+51089,Henry,VA,DMV,dmv,Not Applicable
+51143,Pittsylvania,VA,DMV,dmv,Not Applicable
+51590,Danville,VA,DMV,dmv,Not Applicable
+51690,Martinsville,VA,DMV,dmv,Not Applicable
+51031,Campbell,VA,DMV,dmv,Not Applicable
+51037,Charlotte,VA,DMV,dmv,Not Applicable
+51083,Halifax,VA,DMV,dmv,Not Applicable
+51111,Lunenburg,VA,DMV,dmv,Not Applicable
+51117,Mecklenburg,VA,DMV,dmv,Not Applicable
+51007,Amelia,VA,DMV,dmv,Not Applicable
+51135,Nottoway,VA,DMV,dmv,Not Applicable
+51147,Prince Edward,VA,DMV,dmv,Not Applicable
+51025,Brunswick,VA,DMV,dmv,Not Applicable
+51053,Dinwiddie,VA,DMV,dmv,Not Applicable
+51081,Greensville,VA,DMV,dmv,Not Applicable
+51183,Sussex,VA,DMV,dmv,Not Applicable
+51570,Colonial Heights,VA,DMV,dmv,Not Applicable
+51595,Emporia,VA,DMV,dmv,Not Applicable
+51670,Hopewell,VA,DMV,dmv,Not Applicable
+51730,Petersburg,VA,DMV,dmv,Not Applicable
+51175,Southampton,VA,DMV,dmv,Not Applicable
+51620,Franklin City,VA,DMV,dmv,Not Applicable
+51093,Isle of Wight,VA,DMV,dmv,Not Applicable
+51800,Suffolk,VA,DMV,dmv,Not Applicable
+51149,Prince George,VA,DMV,dmv,Not Applicable
+51036,Charles City,VA,DMV,dmv,Not Applicable
+51095,James City,VA,DMV,dmv,Not Applicable
+51181,Surry,VA,DMV,dmv,Not Applicable
+51830,Williamsburg,VA,DMV,dmv,Not Applicable
+51550,Chesapeake,VA,DMV,dmv,Not Applicable
+51740,Portsmouth,VA,DMV,dmv,Not Applicable
+51710,Norfolk,VA,DMV,dmv,Not Applicable
+51810,Virginia Beach,VA,DMV,dmv,Not Applicable
+51700,Newport News,VA,DMV,dmv,Not Applicable
+51650,Hampton,VA,DMV,dmv,Not Applicable
+51735,Poquoson,VA,DMV,dmv,Not Applicable
+51199,York,VA,DMV,dmv,Not Applicable
+51131,Northampton,VA,DMV,dmv,Not Applicable
+51005,Alleghany,VA,DMV,dmv,Not Applicable
+51045,Craig,VA,DMV,dmv,Not Applicable
+51580,Covington,VA,DMV,dmv,Not Applicable
+51017,Bath,VA,DMV,dmv,Not Applicable
+51023,Botetourt,VA,DMV,dmv,Not Applicable
+51163,Rockbridge,VA,DMV,dmv,Not Applicable
+51530,Buena Vista,VA,DMV,dmv,Not Applicable
+51678,Lexington,VA,DMV,dmv,Not Applicable
+51009,Amherst,VA,DMV,dmv,Not Applicable
+51011,Appomattox,VA,DMV,dmv,Not Applicable
+51680,Lynchburg,VA,DMV,dmv,Not Applicable
+51015,Augusta,VA,DMV,dmv,Not Applicable
+51125,Nelson,VA,DMV,dmv,Not Applicable
+51790,Staunton,VA,DMV,dmv,Not Applicable
+51820,Waynesboro,VA,DMV,dmv,Not Applicable
+51091,Highland,VA,DMV,dmv,Not Applicable
+51165,Rockingham,VA,DMV,dmv,Not Applicable
+51171,Shenandoah,VA,DMV,dmv,Not Applicable
+51660,Harrisonburg,VA,DMV,dmv,Not Applicable
+51029,Buckingham,VA,DMV,dmv,Not Applicable
+51049,Cumberland,VA,DMV,dmv,Not Applicable
+51003,Albemarle,VA,DMV,dmv,Not Applicable
+51065,Fluvanna,VA,DMV,dmv,Not Applicable
+51109,Louisa,VA,DMV,dmv,Not Applicable
+51540,Charlottesville,VA,DMV,dmv,Not Applicable
+51075,Goochland,VA,DMV,dmv,Not Applicable
+51145,Powhatan,VA,DMV,dmv,Not Applicable
+51041,Chesterfield,VA,DMV,dmv,Not Applicable
+51760,Richmond City,VA,DMV,dmv,Not Applicable
+51087,Henrico,VA,DMV,dmv,Not Applicable
+51085,Hanover,VA,DMV,dmv,Not Applicable
+51033,Caroline,VA,DMV,dmv,Not Applicable
+51047,Culpeper,VA,DMV,dmv,Not Applicable
+51079,Greene,VA,DMV,dmv,Not Applicable
+51113,Madison,VA,DMV,dmv,Not Applicable
+51137,Orange,VA,DMV,dmv,Not Applicable
+51139,Page,VA,DMV,dmv,Not Applicable
+51157,Rappahannock,VA,DMV,dmv,Not Applicable
+51187,Warren,VA,DMV,dmv,Not Applicable
+51177,Spotsylvania,VA,DMV,dmv,Not Applicable
+51179,Stafford,VA,DMV,dmv,Not Applicable
+51630,Fredericksburg,VA,DMV,dmv,Not Applicable
+51061,Fauquier,VA,DMV,dmv,Not Applicable
+51153,Prince William,VA,DMV,dmv,Not Applicable
+51683,Manassas,VA,DMV,dmv,Not Applicable
+51685,Manassas Park,VA,DMV,dmv,Not Applicable
+51059,Fairfax County,VA,DMV,dmv,Not Applicable
+51600,Fairfax City,VA,DMV,dmv,Not Applicable
+51127,New Kent,VA,DMV,dmv,Not Applicable
+51001,Accomack,VA,DMV,dmv,Not Applicable
+51101,King William,VA,DMV,dmv,Not Applicable
+51097,King and Queen,VA,DMV,dmv,Not Applicable
+51057,Essex,VA,DMV,dmv,Not Applicable
+51159,Richmond County,VA,DMV,dmv,Not Applicable
+51193,Westmoreland,VA,DMV,dmv,Not Applicable
+51073,Gloucester,VA,DMV,dmv,Not Applicable
+51115,Mathews,VA,DMV,dmv,Not Applicable
+51119,Middlesex,VA,DMV,dmv,Not Applicable
+51103,Lancaster,VA,DMV,dmv,Not Applicable
+51133,Northumberland,VA,DMV,dmv,Not Applicable
+51099,King George,VA,DMV,dmv,Not Applicable
+51013,Arlington,VA,DMV,dmv,Not Applicable
+51510,Alexandria,VA,DMV,dmv,Not Applicable
+51610,Falls Church,VA,DMV,dmv,Not Applicable
+51043,Clarke,VA,DMV,dmv,Not Applicable
+51069,Frederick,VA,DMV,dmv,Not Applicable
+51840,Winchester,VA,DMV,dmv,Not Applicable
+51107,Loudoun,VA,DMV,dmv,Not Applicable
+51019,Bedford County,VA,DMV,dmv,Not Applicable
