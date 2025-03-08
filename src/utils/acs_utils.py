@@ -1,104 +1,237 @@
 import asyncio
 import pandas as pd
-from aiohttp import ClientSession
+import functools
+import re
+import sys
+import os
+from functools import partial
+from collections import defaultdict
+from typing import Dict, List, Tuple, Union, Optional
+from aiohttp import ClientSession, TCPConnector
 
-async def fetch_acs_groups(year: int, acs_type: str, session: ClientSession) -> list:
+# Ensure parent directories are in system path for module access
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # Add parent directory
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # Add src path
+from config.acs_config import ACSConfig  # Import ACSConfig for configuration handling
+
+# -------------------------------------
+# 📌 AGE GROUPING UTILITIES
+# -------------------------------------
+
+# Define standard age groups
+TEN_YEAR_AGE_GROUPS: Dict[str, Tuple[int, int]] = {
+    'Under 5 years': (0, 4), '5 to 14 years': (5, 14), '15 to 24 years': (15, 24),
+    '25 to 34 years': (25, 34), '35 to 44 years': (35, 44), '45 to 54 years': (45, 54),
+    '55 to 64 years': (55, 64), '65 to 74 years': (65, 74), '75 to 84 years': (75, 84),
+    '85 years and over': (85, 100)
+}
+
+LARGE_AGE_GROUPS: Dict[str, Tuple[int, int]] = {
+    'Under 18': (0, 17), '18 to 64': (18, 64), 'Over 64': (65, 100)
+}
+
+
+def extract_age_range(text: str) -> Tuple[int, int]:
     """
-    Fetch ACS group names, descriptions, and ACS type from the Census API.
-    
-    Args:
-        year (int): The year for the ACS data.
-        acs_type (str): The type of ACS data ('', 'profile', or 'subject').
-        session (ClientSession): An active aiohttp session.
-    
+    Extracts the numerical age range from a given ACS text label.
+
+    Parameters:
+        text (str): Age label from ACS data.
+
     Returns:
-        list: A list of dictionaries containing ACS group information.
+        Tuple[int, int]: Minimum and maximum age from the label.
     """
-    base_url = f"https://api.census.gov/data/{year}/acs/acs5"
-    url = f"{base_url}/{acs_type}/groups" if acs_type else f"{base_url}/groups"
+    numbers: List[int] = list(map(int, re.findall(r'\d+', text)))
+    if "Under" in text:
+        return (0, numbers[0])
+    elif "over" in text or "and over" in text:
+        return (numbers[0], 100)
+    elif len(numbers) == 1:
+        return (numbers[0], numbers[0])
+    return tuple(numbers)
+
+
+def find_index_for_age_group(
+    age_group_dict: Dict[str, Tuple[int, int]], 
+    config: Optional[ACSConfig] = None, 
+    **kwargs
+) -> Dict[str, List[int]]:
+    """
+    Maps ACS age labels to predefined age groups and returns index positions.
+
+    Parameters:
+        age_group_dict (Dict[str, Tuple[int, int]]): Mapping of age groups to (min_age, max_age).
+        config (ACSConfig, optional): ACS configuration containing `labels`.
+        kwargs: Additional arguments if `config` is not provided.
+
+    Returns:
+        Dict[str, List[int]]: Dictionary with age group names as keys and index positions as values.
+    """
+    if not config:
+        config = ACSConfig(**kwargs)
     
-    async with session.get(url) as response:
-        response.raise_for_status()
-        json_data = await response.json()
-    
-    return [
-        {"name": group["name"], "description": group["description"], "acs_type": acs_type}
-        for group in json_data["groups"]
+    def is_within_range(test_range: Tuple[int, int], group_range: Tuple[int, int]) -> bool:
+        """Returns True if `test_range` fully fits within `group_range`."""
+        return group_range[0] <= test_range[0] and group_range[1] >= test_range[1]
+
+    # Extract age labels and their index positions
+    parsed_labels: List[Tuple[Tuple[int, int], int]] = [
+        (extract_age_range(label), config.labels.index(label))
+        for label in config.labels if "years" in label
     ]
 
-async def fetch_all_acs_groups(year: int) -> list:
-    """
-    Fetch ACS groups for all types ('', 'profile', 'subject') concurrently.
-    
-    Args:
-        year (int): The year for the ACS data.
-    
-    Returns:
-        list: A combined list of dictionaries with group names, descriptions, and ACS type.
-    """
-    async with ClientSession() as session:
-        tasks = [fetch_acs_groups(year, acs_class, session) for acs_class in ["", "profile", "subject"]]
-        results = await asyncio.gather(*tasks)
-    
-    return [group for result in results for group in result]  # Flatten the results list
-
-def gen_group_names_acs(config):
-    """
-    Retrieve available ACS group names, their descriptions, and ACS type based on a given ACSConfig instance.
-    
-    Args:
-        config (ACSConfig): A configuration object containing the ACS year and group(s).
-    
-    Returns:
-        tuple: (
-            list of group names,
-            list of metadata [['name', 'description'], ['B01001', 'Population by Age'], ...],
-            acs_type (str)
+    # Organize indices by age group
+    index_by_age_group: Dict[str, List[int]] = defaultdict(list)
+    for age_range, index in parsed_labels:
+        matched_group: Optional[str] = next(
+            (group for group, bounds in age_group_dict.items() if is_within_range(age_range, bounds)), 
+            None
         )
+        if matched_group:
+            index_by_age_group[matched_group].append(index)
+
+    return dict(index_by_age_group)
+
+
+# Create pre-configured functions for standard age groups
+find_large_age_groups = partial(find_index_for_age_group, age_group_dict=LARGE_AGE_GROUPS)
+find_ten_year_age_groups = partial(find_index_for_age_group, age_group_dict=TEN_YEAR_AGE_GROUPS)
+
+
+# -------------------------------------
+# 📌 ACS API HANDLING FUNCTIONS
+# -------------------------------------
+
+def batchify_variables(config: ACSConfig) -> List[List[str]]:
     """
-    year = config.year
-    groups_data = asyncio.run(fetch_all_acs_groups(year))
-    
-    # Create a lookup dictionary for quick access
-    group_lookup = {group["name"]: group for group in groups_data}
-    
-    # Convert single group string to a list for uniform handling
-    if isinstance(config.acs_group, str):
-        config.acs_group = [config.acs_group]
-    
-    # Identify any missing groups
-    missing_groups = [g for g in config.acs_group if g not in group_lookup]
-    if missing_groups:
-        raise AttributeError(f"Invalid ACS group ID(s): {missing_groups}")
-    
-    # Ensure all groups belong to the same ACS type
-    acs_types = {group_lookup[g]["acs_type"] for g in config.acs_group}
-    if len(acs_types) > 1:
-        raise AttributeError("All groups must belong to the same ACS type.")
-    
-    acs_type = acs_types.pop()  # Extract the single ACS type
-    
-    # Build output lists
-    group_names = config.acs_group
-    group_metadata = [["name", "description"]] + [
-        [group_lookup[g]["name"], group_lookup[g]["description"]] for g in config.acs_group
-    ]
-    
-    return group_names, group_metadata, acs_type
+    Splits ACS variable lists into batches of 49 (API limitation).
+
+    Parameters:
+        config (ACSConfig): Configuration containing variable list.
+
+    Returns:
+        List[List[str]]: List of variable sub-lists.
+    """
+    batch_size: int = 49
+    table: List[str] = config.variables
+    if len(table) > batch_size:
+        num_full: int = len(table) // batch_size
+        return [table[i * batch_size:(i + 1) * batch_size] for i in range(num_full)] + [table[num_full * batch_size:]]
+    return [table]
 
 
-# testing
-if __name__ == "__main__":
-    import sys
-    import os
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # add parent directory to path
-    # add src to path
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))) # add src to path
+async def download_for_batch(config, table: str, key: str, session: ClientSession) -> List[str]:
+    if config.acs_type == '':
+        source = 'acs/acs5'
+    else:
+        source = f'acs/acs5/{config.acs_type}'
+                
+                
+#     table = ','.join(batchify_variables(config)[0])
+    if isinstance(config.state_fips, str) or isinstance(config.state_fips, int):
+        if config.query_level == 'state':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get={table}&for=state:{config.state_fips}&key={key}'
+        elif config.query_level == 'county':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county:*&in=state:{config.state_fips}&key={key}'
+        elif config.query_level == 'county subdivision':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county%20subdivision:*&in=state:{config.state_fips}&in=county:*&key={key}'
+        elif config.query_level == 'tract':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=tract:*&in=state:{config.state_fips}&in=county:*&key={key}'
+        elif config.query_level == 'block':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=block%20group:*&in=state:{config.state_fips}&in=county:*&in=tract:*&key={key}'
+        elif config.query_level == 'zip':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=zip%20code%20tabulation%20area:*&in=state:{config.state_fips}&key={key}'
+        elif config.query_level == 'puma':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=public%20use%20microdata%20area:*&in=state:{config.state_fips}&key={key}'
+        else:
+            raise ValueError('The region level is not found in the system; select among state, county, county subdivision, tract, block, zip and puma')
+    elif isinstance(config.state_fips, list):
+        config.state_fips = [str(x) for x in config.state_fips]
+        states = ','.join(config.state_fips)
+        if config.query_level == 'state':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get={table}&for=state:{states}&key={key}'
+        elif config.query_level == 'county':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county:*&in=state:{states}&key={key}'
+        elif config.query_level == 'county subdivision':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county%20subdivision:*&in=state:{states}&in=county:*&key={key}'
+        elif config.query_level == 'tract':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=tract:*&in=state:{states}&in=county:*&key={key}'
+        elif config.query_level == 'block':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=block%20group:*&in=state:{states}&in=county:*&in=tract:*&key={key}'
+        elif config.query_level == 'zip':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=zip%20code%20tabulation%20area:*&in=state:{states}&key={key}'
+        elif config.query_level == 'puma':
+            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=public%20use%20microdata%20area:*&in=state:{states}&key={key}'
+        else:
+            raise ValueError('The region level is not found in the system; select among state, county, county subdivision, tract, block, zip and puma')
+    async with session.get(acs_url) as resp:
+        resp.raise_for_status()
+        json_raw = await resp.json()
+    return json_raw
 
 
-    from config.acs_config import ACSConfig
-    config = ACSConfig(year=2021, acs_group=["B01001", "B01002"], state_fips="06", query_level="county")
-    group_names, metadata, acs_type = gen_group_names_acs(config)
-    print(group_names)
-    print(metadata)
-    print(acs_type)
+async def download_all(config: ACSConfig, key: str) -> List[List[str]]:
+    """
+    Downloads all ACS data asynchronously using batch requests.
+
+    Parameters:
+        config (ACSConfig): ACS configuration.
+        key (str): Census API key.
+
+    Returns:
+        List[List[str]]: List of JSON responses.
+    """
+    tables: List[List[str]] = batchify_variables(config)
+    connector: TCPConnector = TCPConnector(limit=10)  # Limit concurrent requests
+    async with ClientSession(connector=connector) as session:
+        tasks = [download_for_batch(config, ",".join(table), key, session) for table in tables]
+        return await asyncio.gather(*tasks)
+
+
+def acs_data(key: str, config: Optional[ACSConfig] = None, **kwargs) -> pd.DataFrame:
+    """
+    Retrieves and processes ACS data into a DataFrame.
+
+    Parameters:
+        key (str): Census API key.
+        config (ACSConfig, optional): ACS configuration.
+        kwargs: Additional config parameters if not provided.
+
+    Returns:
+        pd.DataFrame: Processed ACS data.
+    """
+    if not config:
+        config = ACSConfig(**kwargs)
+
+    # Run the download function asynchronously
+    result: List[List[str]] = asyncio.run(download_all(config, key))
+
+    # Convert JSON response into a DataFrame
+    df_list: List[pd.DataFrame] = [pd.DataFrame(res[1:], columns=res[0]) for res in result if res]
+    if not df_list:
+        return pd.DataFrame()
+
+    # Merge all DataFrames on non-numeric columns
+    merge_columns: List[str] = df_list[0].columns[df_list[0].columns.str.isalpha()].tolist()
+    df: pd.DataFrame = functools.reduce(lambda left, right: left.merge(right, how='inner', on=merge_columns), df_list)
+
+    # Rename and sort for consistency
+    if config.query_level == 'puma':
+        df.rename(columns={'public use microdata area': "PUMA"}, inplace=True)
+
+    return df
+
+def custom_acs_data(key, config = None, **kwargs):    
+    def decorator_transform(func, key = key, config = config):
+        if config:
+            pass
+        else:
+            config = ACSConfig(**kwargs)
+        @functools.wraps(func)
+        def wrapper(**kwargs):
+            df = acs_data(key, config)
+            df = func(df)
+            return df
+        return wrapper
+    return decorator_transform
+
