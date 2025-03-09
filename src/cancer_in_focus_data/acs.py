@@ -434,9 +434,6 @@ class acs_sdoh:
         if return_table:
             return transform_df()
         
-        
-        
-        
     def gen_income_table(self, group_id = "B19013", race = 'all', return_table = False):
         config = self.gen_acs_config(**{'acs_group': group_id, 'acs_type': ''})
         @custom_acs_data(self.key, config)
@@ -488,7 +485,7 @@ class acs_sdoh:
         
         @custom_acs_data(self.key, config)
         def transform_df(df):
-            def gen_race_series(race_variable, df = df, config = config):
+            def gen_race_series(race_variable, df = df):
                 newdf = df.copy()
                 race_series = newdf[race_variable].astype(int)/newdf.B03002_001E.astype(int)
                 del newdf

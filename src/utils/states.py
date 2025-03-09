@@ -5,3 +5,6 @@ file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "states.csv
 # Load CSV into a DataFrame
 stateDf = pd.read_csv(file_path, dtype={'FIPS2': str})
 
+
+if __name__ == "__main__":
+    print(stateDf.head())
