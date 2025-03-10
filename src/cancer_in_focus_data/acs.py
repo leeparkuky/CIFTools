@@ -18,13 +18,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from utils.states import stateDf
 from utils.acs_utils import *
 from config.acs_config import ACSConfig
+from utils.ciftools_logger import logger
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)],
-)
 
 
 @dataclass
@@ -42,36 +37,36 @@ class acs_sdoh:
         Returns:
             dict: Dictionary containing cleaned ACS tables.
         """
-        logging.info("Starting cancer_infocus_download process.")
+        logger.info("Starting cancer_infocus_download process.")
         cancer_infocus_funcs = [self.__getattribute__(x) for x in self.__dir__() if re.match("gen_\\w.+_table", x)]
 
         # Progress bar for function execution
         for func in tqdm(cancer_infocus_funcs, desc="Generating ACS tables"):
-            logging.info(f"Running function: {func.__name__}")
+            logger.info(f"Running function: {func.__name__}")
             func()
 
         output = self.download_all()
-        logging.info("Finished downloading all tables.")
+        logger.info("Finished downloading all tables.")
         return output
 
     def download_all(self):
-        logging.info("Starting download_all function.")
+        logger.info("Starting download_all function.")
         res = Parallel(n_jobs=-1)(
             delayed(self.cleanup_geo_col)(fun(), self.query_level) for fun in self.functions.values()
         )
-        logging.info("Completed parallel execution of all functions.")
+        logger.info("Completed parallel execution of all functions.")
         return {key: val for key, val in zip(self.functions.keys(), res)}
 
     def clean_functions(self):
-        logging.info("Cleaning function dictionary.")
+        logger.info("Cleaning function dictionary.")
         if hasattr(self, "functions"):
             self.functions = {}
         else:
-            logging.warning("No function dictionary found to clean.")
+            logger.warning("No function dictionary found to clean.")
 
     @staticmethod
     def cleanup_geo_col(df, level):
-        logging.info(f"Cleaning up geographic columns for level: {level}")
+        logger.info(f"Cleaning up geographic columns for level: {level}")
 
         def cap_mc(s):
             if s[:2].lower() == "mc":
@@ -96,14 +91,14 @@ class acs_sdoh:
                 columns = pd.DataFrame(zip(FIPS, county_name, state_name), columns=["FIPS", "County", "State"])
 
         elif level == "zip":
-            logging.info("Processing ZIP-level data.")
+            logger.info("Processing ZIP-level data.")
             zip_name = [x[-5:] for x in df.NAME]
             states = {x: stateDf.loc[stateDf.FIPS2.eq(str(x)), "State"].values[0] for x in df.state.unique()}
             state_name = df.state.apply(lambda x: states[x])
             columns = pd.DataFrame(zip(zip_name, state_name), columns=["ZCTA5", "State"])
 
         elif level == "puma":
-            logging.info("Processing PUMA-level data.")
+            logger.info("Processing PUMA-level data.")
             states = {x: stateDf.loc[stateDf.FIPS2.eq(str(x)), "State"].values[0] for x in df.state.unique()}
             state_name = df.state.apply(lambda x: states[x])
             puma_name = df.NAME.apply(lambda x: x.split(",")[0])
@@ -117,17 +112,15 @@ class acs_sdoh:
         sorting_key = {"county": "FIPS", "zip": "ZCTA5", "puma": ["State", "PUMA_ID"]}.get(level, "FIPS")
         df = df.sort_values(sorting_key).reset_index(drop=True)
 
-        logging.info(f"Completed cleanup for level: {level}")
+        logger.info(f"Completed cleanup for level: {level}")
         return df
 
     def add_function(self, func, name):
-        logging.info(f"Adding function {name} to function dictionary.")
         if not hasattr(self, "functions"):
             self.functions = {}
         self.functions[name] = func
 
     def gen_acs_config(self, **kwargs):
-        logging.info(f"Generating ACS config with arguments: {kwargs}")
         arguments = {
             "year": self.year,
             "state_fips": self.state_fips,
@@ -139,13 +132,13 @@ class acs_sdoh:
         return self.config
 
     def add_custom_table(self, group_id, acs_type, name):
-        logging.info(f"Adding custom table: {name}")
+        logger.info(f"Adding custom table: {name}")
         config = self.gen_acs_config(acs_group=group_id, acs_type=acs_type)
 
         def transform_data(func):
             @functools.wraps(func)
             def wrapper(**kwargs):
-                logging.info(f"Fetching ACS data for {name}.")
+                logger.info(f"Fetching ACS data for {name}.")
                 df = acs_data(self.key, config)
                 df = func(df, **kwargs)
                 return df
@@ -156,12 +149,10 @@ class acs_sdoh:
         return transform_data
 
     def gen_insurance_table(self, return_table=False):
-        logging.info("Generating insurance table.")
         config = self.gen_acs_config(acs_group=["B27001", "C27007"], acs_type="")
 
         @custom_acs_data(self.key, config)
         def transform_df(df):
-            logging.info("Transforming insurance data.")
             insurance_col = [config.variables[config.labels.index(x)] for x in config.labels if re.match(".+With health insurance coverage", x)]
             medicaid_col = [config.variables[config.labels.index(x)] for x in config.labels if re.match(".+With Medicaid/means-tested public coverage", x)]
             df["health_insurance_coverage_rate"] = df.loc[:, insurance_col].astype(int).sum(axis=1) / df.B27001_001E.astype(int)

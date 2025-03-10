@@ -13,7 +13,7 @@ from aiohttp import ClientSession, TCPConnector
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # Add parent directory
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # Add src path
 from config.acs_config import ACSConfig  # Import ACSConfig for configuration handling
-
+from utils.ciftools_logger import logger
 # -------------------------------------
 # 📌 AGE GROUPING UTILITIES
 # -------------------------------------
