@@ -1,6 +1,21 @@
 import os
 from functools import lru_cache  # Import caching function
 from .ciftools_logger import logger  # Import logger
+from pathlib import Path
+
+
+
+def find_source_folder(start_path):
+    current_path = start_path
+    while current_path != os.path.dirname(current_path):  # Stop at the root directory
+        if '.git' in os.listdir(current_path) or '.gitignore' in os.listdir(current_path):
+            return current_path
+        current_path = os.path.dirname(current_path)
+    return None
+
+# Example usage
+start_path = os.path.dirname(os.path.abspath(__file__))  # Use the directory of the current file
+source_folder = Path(find_source_folder(start_path))
 
 
 @lru_cache(maxsize=1)
