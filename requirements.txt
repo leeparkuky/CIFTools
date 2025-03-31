@@ -11,3 +11,4 @@ numpy
 geopandas
 openpyxl
 xlrd
+tqdm_joblib

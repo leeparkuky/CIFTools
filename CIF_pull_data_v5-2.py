@@ -78,7 +78,7 @@ class organize_table:
         elif query_level == 'puma':
             df = df.loc[df.PUMA_ID.isin(ca.PUMA_ID.tolist()) & df.State.isin(ca.State.tolist()),:].reset_index(drop = True)
             return df
-
+ 
     def merge_all(self, *args, **kwargs):
         if 'query_level' in kwargs.keys():
             query_level = kwargs['query_level']
