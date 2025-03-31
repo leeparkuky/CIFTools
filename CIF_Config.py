@@ -107,3 +107,10 @@ class ACSConfig:
             self._var_desc = self.var_desc.loc[self.var_desc.name.isin(self._variables),:].reset_index(drop = True)
                 
         return self._variables
+
+
+#%% test
+
+if __name__ == "__main__":
+    config = ACSConfig(year=2021, acs_group=["B01001"], state_fips="21", query_level="tract")
+    print(config.variables)

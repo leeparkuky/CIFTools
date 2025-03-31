@@ -31,139 +31,6 @@ from utils import stateDf
 from bs4 import BeautifulSoup
 
 
-# Hell World from VIM
-
-
-def batchify_variables(config: ACSConfig):
-    if config.acs_type == '':
-        source = 'acs/acs5'
-    else:
-        source = f'acs/acs5/{config.acs_type}'
-    table = config.variables
-    batch_size = 49
-    if len(table) > batch_size:
-        num_full = len(table)//batch_size
-        table_split = [table[k*batch_size:(k+1)*batch_size] for k in range(num_full)]
-        table_split.append(table[num_full*batch_size:])
-        return table_split
-    else:
-        return [table]
-
-
-async def donwload_for_batch(config, table: str, key: str, session: ClientSession) -> List[str]:
-    if config.acs_type == '':
-        source = 'acs/acs5'
-    else:
-        source = f'acs/acs5/{config.acs_type}'
-                
-                
-#     table = ','.join(batchify_variables(config)[0])
-    if isinstance(config.state_fips, str) or isinstance(config.state_fips, int):
-        if config.query_level == 'state':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get={table}&for=state:{config.state_fips}&key={key}'
-        elif config.query_level == 'county':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county:*&in=state:{config.state_fips}&key={key}'
-        elif config.query_level == 'county subdivision':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county%20subdivision:*&in=state:{config.state_fips}&in=county:*&key={key}'
-        elif config.query_level == 'tract':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=tract:*&in=state:{config.state_fips}&in=county:*&key={key}'
-        elif config.query_level == 'block':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=block%20group:*&in=state:{config.state_fips}&in=county:*&in=tract:*&key={key}'
-        elif config.query_level == 'zip':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=zip%20code%20tabulation%20area:*&in=state:{config.state_fips}&key={key}'
-        elif config.query_level == 'puma':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=public%20use%20microdata%20area:*&in=state:{config.state_fips}&key={key}'
-        else:
-            raise ValueError('The region level is not found in the system; select among state, county, county subdivision, tract, block, zip and puma')
-    elif isinstance(config.state_fips, list):
-        config.state_fips = [str(x) for x in config.state_fips]
-        states = ','.join(config.state_fips)
-        if config.query_level == 'state':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get={table}&for=state:{states}&key={key}'
-        elif config.query_level == 'county':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county:*&in=state:{states}&key={key}'
-        elif config.query_level == 'county subdivision':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=county%20subdivision:*&in=state:{states}&in=county:*&key={key}'
-        elif config.query_level == 'tract':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=tract:*&in=state:{states}&in=county:*&key={key}'
-        elif config.query_level == 'block':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=block%20group:*&in=state:{states}&in=county:*&in=tract:*&key={key}'
-        elif config.query_level == 'zip':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=zip%20code%20tabulation%20area:*&in=state:{states}&key={key}'
-        elif config.query_level == 'puma':
-            acs_url = f'https://api.census.gov/data/{config.year}/{source}?get=NAME,{table}&for=public%20use%20microdata%20area:*&in=state:{states}&key={key}'
-        else:
-            raise ValueError('The region level is not found in the system; select among state, county, county subdivision, tract, block, zip and puma')
-    resp = await session.request(method="GET", url=acs_url)
-    resp.raise_for_status()    
-    json_raw =  await resp.json()
-    return json_raw
-
-
-
-async def download_all(config, key):
-    tables = batchify_variables(config)
-    async with ClientSession() as session:
-        tasks = [donwload_for_batch(config, f"{','.join(table)}", key, session) for table in tables]
-        return await asyncio.gather(*tasks)
-    
-    
-    
-def acs_data(key, config = None, **kwargs):
-    import sys
-    if config:
-        pass
-    else:
-        config = ACSConfig(**kwargs)
-    if sys.platform in ['win32','cygwin']:
-#         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy()) # not working 
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        result = asyncio.get_event_loop().run_until_complete(download_all(config, key))
-    else:                                                     
-        result = asyncio.run(download_all(config, key))
-    if len(result) == 1:
-        df = pd.DataFrame(result[0][1:], columns = result[0][0])
-        if isinstance(config.acs_group, list):
-            data_columns = []
-            for group in config.acs_group:
-                data_columns += df.columns[df.columns.str.contains(group)].tolist()
-            index_columns = df.columns[~df.columns.isin(data_columns)].tolist()
-        elif isinstance(config.acs_group, str):
-            data_columns = df.columns[df.columns.str.contains(config.acs_group)].tolist()
-            index_columns = df.columns[~df.columns.str.contains(config.acs_group)].tolist()
-        else:
-            raise AttributeError("config.acs_group should be either string or a list")
-        df = df.loc[:, index_columns + data_columns]
-    else:
-        for i, res in enumerate(result):
-            if i == 0:
-                df = pd.DataFrame(res[1:], columns = res[0])
-            else:
-                df_1 = pd.DataFrame(res[1:], columns = res[0])
-                merge_columns = df.columns[df.columns.str.isalpha()].tolist()
-                if config.query_level == 'puma':
-                    merge_columns += ['public use microdata area']
-                df = df.merge(df_1, how = 'inner', on = merge_columns)
-    df = pd.concat([df.loc[:, df.columns.str.isalpha()], df.loc[:, ~df.columns.str.isalpha()]], axis = 1)
-    if config.query_level == 'puma':
-        df.rename(columns = {'public use microdata area': "PUMA"}, inplace = True)
-    return df
-
-
-def custom_acs_data(key, config = None, **kwargs):    
-    def decorator_transform(func, key = key, config = config):
-        if config:
-            pass
-        else:
-            config = ACSConfig(**kwargs)
-        @functools.wraps(func)
-        def wrapper(**kwargs):
-            df = acs_data(key, config)
-            df = func(df)
-            return df
-        return wrapper
-    return decorator_transform
-
 ###################################################################################################################
 ####################### census sdoh variables for CIFTools ########################################################
 ###################################################################################################################
@@ -174,7 +41,6 @@ class acs_sdoh:
     state_fips: Union[str, int]
     query_level: str        
     key: str
-    
     
     
     def cancer_infocus_download(self):
@@ -634,65 +500,6 @@ class acs_sdoh:
 # utils for Demographics
 #########################
 
-ten_years = dict(zip(['Under 5 years', '5 to 14 years','15 to 24 years',
-                      '25 to 34 years','35 to 44 years','45 to 54 years',
-                      '55 to 64 years','65 to 74 years','75 to 84 years',
-                      '85 years and over'],
-                     [(0, 4), (5, 14), (15, 24), (25, 34), (35, 44), (45, 54), (55, 64),
-                      (65, 74), (75, 84), (85, 100)]))
-
-total_years = dict(zip(['Under 18', '18 to 64', 'Over 64'],
-                       [(0, 17), (18, 64), (65, 100)]))
-
-
-def find_index_for_age_group(age_group_dict, config = None, **kwargs):
-    if config:
-        pass
-    else:
-        config = ACSConfig(**kwargs)
-        
-    def extract_age_range(text):
-        """from the labels for B01001, this extracts age interval in a tuple:
-        \d year old    -> (\d, \d)
-        Under \d years -> (0, \d)
-        \d_1 to \d_2   -> (\d_1, \d_2)
-        \d and over    -> (\d, 100)
-        """
-        def check_integer(s):
-            try:
-                int(s)
-                return True
-            except:
-                return False
-        numbers = [int(x) for x in text.split(' ') if check_integer(x)]
-        if len(numbers) == 1:
-            numbers = numbers + numbers
-        return tuple(numbers)
-    
-    one = [[x.replace('Under', '0 to').replace('over','100'), config.labels.index(x)] for x in config.labels if re.match('.*years.*', x)]
-    two = [(extract_age_range(x[0]), x[1]) for x  in one]
-
-    def check_in_between(t1, t2):
-        if t1[0] >= t2[0] and t1[1] <= t2[1]:
-            return True
-        else:
-            return False
-
-    def find_age_group(test):
-        for k, v in age_group_dict.items():
-            if check_in_between(test[0], v):
-                return k
-        
-# def find_index_for_age_group(new_def, two):
-    index_by_age_group = {k: [] for k in age_group_dict.keys()}
-    for t in two:
-        index_by_age_group[find_age_group(t)].append(t[1])
-    return index_by_age_group
-
-
-large_age_groups = partial(find_index_for_age_group, age_group_dict = total_years)
-
-ten_year_age_groups = partial(find_index_for_age_group, age_group_dict = ten_years)
 
 
 
@@ -1305,7 +1112,7 @@ def uscs_incidence():
 ############################################################################
 ## BLS      ################################################################
 ############################################################################
-
+ 
 @dataclass
 class BLS:
     state_fips: Union[str, List[str]]
