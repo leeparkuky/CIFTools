@@ -1,0 +1,29 @@
+area:
+  type: "catchement"
+  area_file: "uky_ca.csv"
+
+acs:
+  query_level: 
+    - county
+    - tract
+  acs_year: 2021
+
+facilities: 
+  facility_types:
+    - nppes
+    - mammography
+    - hpsa
+    - fqhc
+    - lung_cancer_screening
+    - tri_facility
+    - superfund
+
+cancer: true
+bls: true
+food_desert: true
+fcc: true
+urban_rural: true
+ejscreen: true
+cdc_places: true
+cdc_svi: true
+download_dir: "/root/CIFTools/example_config"

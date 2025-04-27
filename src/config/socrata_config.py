@@ -6,6 +6,7 @@ from sodapy import Socrata
 # Load environment variables
 load_dotenv("/root/CIFTools/.env")
 
+
 @dataclass
 class SocrataConfig:
     domain: str = os.getenv("SOCRATA_DOMAIN", "chronicdata.cdc.gov")
@@ -16,9 +17,14 @@ class SocrataConfig:
     @property
     def client(self):
         """Returns an authenticated Socrata API client."""
-        if not hasattr(self, '_client'):
+        if not hasattr(self, "_client"):
             if self.user_name and self.password:
-                self._client = Socrata(self.domain, self.app_token, username=self.user_name, password=self.password)
+                self._client = Socrata(
+                    self.domain,
+                    self.app_token,
+                    username=self.user_name,
+                    password=self.password,
+                )
             else:
                 self._client = Socrata(self.domain, self.app_token)
         return self._client
