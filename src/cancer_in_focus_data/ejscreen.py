@@ -6,18 +6,13 @@ from tqdm import tqdm
 from typing import Union, List, Dict
 from io import BytesIO
 from zipfile import ZipFile
-
-# Import logger
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # add src to path
-from utils.ciftools_logger import logger
+from ..utils.ciftools_logger import logger
 
 
 class EJScreen:
     """
     A class to fetch and process EJScreen data from the EPA.
-    
+
     Attributes:
         state_fips (Union[str, List[str]]): State FIPS code(s) to filter the dataset.
     """
@@ -52,7 +47,10 @@ class EJScreen:
             # Open the URL and get the file size for tqdm
             with urllib.request.urlopen(self.url) as response:
                 total_size = int(response.headers.get("content-length", 0))
-                logger.info("Starting EJScreen data download. File size: %.2f MB", total_size / (1024 * 1024))
+                logger.info(
+                    "Starting EJScreen data download. File size: %.2f MB",
+                    total_size / (1024 * 1024),
+                )
 
                 # Download file with progress tracking
                 with tqdm(
@@ -102,7 +100,9 @@ class EJScreen:
 
             # Filter by state(s)
             if isinstance(self.state_fips, str):
-                assert len(self.state_fips) == 2, "State FIPS should be a 2-digit string."
+                assert len(self.state_fips) == 2, (
+                    "State FIPS should be a 2-digit string."
+                )
                 df = df.loc[df["State"] == self.state_fips].reset_index(drop=True)
             else:
                 for state in self.state_fips:

@@ -9,9 +9,8 @@ from typing import Union, List, Dict
 from tempfile import NamedTemporaryFile
 
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))  # add src to path
-from utils.ciftools_logger import logger
+from ..utils.ciftools_logger import logger
+
 
 class FoodDesert:
     """
@@ -22,7 +21,9 @@ class FoodDesert:
         var_name (str): The variable name from the dataset (default: 'LILATracts_Vehicle').
     """
 
-    def __init__(self, state_fips: Union[str, List[str]], var_name: str = "LILATracts_Vehicle"):
+    def __init__(
+        self, state_fips: Union[str, List[str]], var_name: str = "LILATracts_Vehicle"
+    ):
         """
         Initializes the FoodDesert class by fetching the most recent dataset URL.
 
@@ -42,13 +43,22 @@ class FoodDesert:
             str: The dataset download URL.
         """
         logger.info("Fetching the USDA food desert dataset URL...")
-        
+
         try:
-            response = requests.get("https://www.ers.usda.gov/data-products/food-access-research-atlas/download-the-data/")
+            response = requests.get(
+                "https://www.ers.usda.gov/data-products/food-access-research-atlas/download-the-data/"
+            )
             response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
-            hrefs = [a['href'] for a in soup.find_all('a', href=True)]
-            dataset_url = next((url for url in hrefs if re.search(r"FoodAccessResearchAtlasData.*", url, re.I)), None)
+            hrefs = [a["href"] for a in soup.find_all("a", href=True)]
+            dataset_url = next(
+                (
+                    url
+                    for url in hrefs
+                    if re.search(r"FoodAccessResearchAtlasData.*", url, re.I)
+                ),
+                None,
+            )
 
             if not dataset_url:
                 logger.error("No dataset URL found on the page.")
@@ -56,7 +66,7 @@ class FoodDesert:
 
             logger.info("Dataset URL successfully retrieved.")
             return dataset_url
-        
+
         except requests.RequestException as e:
             logger.error("Failed to fetch dataset URL: %s", e)
             raise RuntimeError(f"Failed to fetch dataset URL: {e}")
@@ -85,20 +95,23 @@ class FoodDesert:
         # Stream the file while downloading
         response = requests.get(self.url, stream=True)
         response.raise_for_status()
-        
+
         total_size = int(response.headers.get("content-length", 0))
         chunk_size = 1024 * 1024  # 1 MB chunks
 
         with NamedTemporaryFile(delete=True, suffix=".xlsx") as temp_file:
             temp_filename = temp_file.name
-            with open(temp_filename, "wb") as file, tqdm(
-                desc="Downloading food desert data file",
-                total=total_size,
-                unit="B",
-                unit_scale=True,
-                unit_divisor=1024,
-                leave=True
-            ) as bar:
+            with (
+                open(temp_filename, "wb") as file,
+                tqdm(
+                    desc="Downloading food desert data file",
+                    total=total_size,
+                    unit="B",
+                    unit_scale=True,
+                    unit_divisor=1024,
+                    leave=True,
+                ) as bar,
+            ):
                 for chunk in response.iter_content(chunk_size=chunk_size):
                     file.write(chunk)
                     bar.update(len(chunk))
@@ -106,7 +119,12 @@ class FoodDesert:
             logger.info("Download complete. Processing dataset...")
 
             # Read dataset (assuming sheet index 2 contains the data)
-            df = pd.read_excel(temp_filename, engine="openpyxl", sheet_name=2, dtype={"CensusTract": str})
+            df = pd.read_excel(
+                temp_filename,
+                engine="openpyxl",
+                sheet_name=2,
+                dtype={"CensusTract": str},
+            )
 
         logger.info("Cleaning and filtering dataset...")
 
@@ -141,7 +159,9 @@ class FoodDesert:
         logger.info("Processing data at Tract and County levels...")
 
         # **Tract-Level Data**
-        df_tract = df[["CensusTract", self.var_name]].rename(columns={"CensusTract": "FIPS"})
+        df_tract = df[["CensusTract", self.var_name]].rename(
+            columns={"CensusTract": "FIPS"}
+        )
         df_tract["FIPS"] = df_tract["FIPS"].astype(str)
 
         # **County-Level Data**
@@ -150,7 +170,9 @@ class FoodDesert:
 
         df_county = (
             df_county.groupby("FIPS")
-            .apply(lambda x: pd.Series(np.average(x[self.var_name], weights=x["OHU2010"])))
+            .apply(
+                lambda x: pd.Series(np.average(x[self.var_name], weights=x["OHU2010"]))
+            )
             .reset_index()
         )
         df_county.columns = ["FIPS", self.var_name]
