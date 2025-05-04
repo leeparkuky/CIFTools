@@ -26,4 +26,4 @@ urban_rural: true
 ejscreen: true
 cdc_places: true
 cdc_svi: true
-download_dir: "/root/CIFTools/example_config"
+download_path: "/root/CIFTools/example_config/kentuck_2024.pickle" # the output format is pickle

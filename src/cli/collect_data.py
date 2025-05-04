@@ -27,32 +27,8 @@ api_key = os.getenv("CENSUS_API_KEY")
 'food_desert': True, 
 'fcc': True, 
 'urban_rural': True, 
-'download_dir': '/root/CIFTools/example_config'}
+'download_path': '/root/CIFTools/example_config/kentuck_2024.pickle'}
 """
-# config = {
-#     "area": {"type": "catchement", "area_file": "uky_ca.csv"},
-#     "acs": {"query_level": ["county", "tract"], "acs_year": 2021},
-#     "facilities": {
-#         "facility_types": [
-#             "nppes",
-#             "mammography",
-#             "hpsa",
-#             "fqhc",
-#             "lung_cancer_screening",
-#             "tri_facility",
-#             "superfund",
-#         ]
-#     },
-#     "cancer": True,
-#     "bls": True,
-#     "food_desert": True,
-#     "fcc": True,
-#     "urban_rural": True,
-#     "ejscreen": True,
-#     "cdc_places": True,
-#     "cdc_svi": True,
-#     "download_dir": "/root/CIFTools/example_config",
-# }
 
 
 def check_ca_file(ca_file_path):
@@ -89,7 +65,7 @@ def fetch_data(config: dict):
             - facilities: Types of facilities to collect data for.
             - cancer, bls, food_desert, fcc, urban_rural, ejscreen, cdc_places, cdc_svi:
               Boolean flags indicating whether to collect respective datasets.
-            - download_dir: Directory to save downloaded data.
+            - download_path: Where the data will be saved (in pickle format).
 
     Returns:
         dict: A dictionary containing the collected data organized by data source and geographic level.
@@ -98,13 +74,13 @@ def fetch_data(config: dict):
     if any(val is False for val in config.values()):
         config = {key: val for key, val in config.items() if val is not False}
 
-    # Calculate the number of data sources to fetch (excluding 'area' and 'download_dir')
+    # Calculate the number of data sources to fetch (excluding 'area' and 'download_path')
     num_data = len(config) - 2
     logger.info(f"Number of data sources to collect: {num_data}")
 
     # Get the list of data source keys to iterate over
     data_to_collect = [
-        key for key in config.keys() if key not in ["area", "download_dir"]
+        key for key in config.keys() if key not in ["area", "download_path"]
     ]
 
     # Find and validate the path to the catchment area file
@@ -322,7 +298,7 @@ def main(config: str):
     output_data = fetch_data(config)
     # Save the collected data to a file
     output_file_path = os.path.join(
-        config["download_dir"], "ciftool_data.pickle"
+        config["download_path"]
     )  # Ensure the file has a .pickle extension
     joblib.dump(output_data, output_file_path)
     logger.info(f"Data collected and saved to {output_file_path}")

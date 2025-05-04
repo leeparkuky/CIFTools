@@ -21,6 +21,10 @@ def read_yaml_config(config_path: str) -> Dict[str, Any]:
     """
     with open(config_path, "r") as file:
         config = yaml.safe_load(file)
+    assert "download_path" in config, "download_path not found in config"
+    assert config.get("download_path").endswith(".pickle"), (
+        "download_path must end with .pickle"
+    )
     return config
 
 

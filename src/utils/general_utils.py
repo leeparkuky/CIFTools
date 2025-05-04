@@ -4,20 +4,6 @@ from .ciftools_logger import logger  # Import logger
 from pathlib import Path
 
 
-
-def find_source_folder(start_path):
-    current_path = start_path
-    while current_path != os.path.dirname(current_path):  # Stop at the root directory
-        if '.git' in os.listdir(current_path) or '.gitignore' in os.listdir(current_path):
-            return current_path
-        current_path = os.path.dirname(current_path)
-    return None
-
-# Example usage
-start_path = os.path.dirname(os.path.abspath(__file__))  # Use the directory of the current file
-source_folder = Path(find_source_folder(start_path))
-
-
 @lru_cache(maxsize=1)
 def find_repo_home() -> str:
     """
@@ -30,11 +16,17 @@ def find_repo_home() -> str:
     current_dir = os.path.abspath(__file__)
 
     while current_dir != os.path.dirname(current_dir):  # Stop at filesystem root "/"
-        if any(os.path.exists(os.path.join(current_dir, marker)) for marker in [".git", "pyproject.toml", "setup.py", ".gitignore"]):
+        if any(
+            os.path.exists(os.path.join(current_dir, marker))
+            for marker in [".git", "pyproject.toml", "setup.py", ".gitignore"]
+        ):
             logger.info("Repository root found: %s", current_dir)
             return current_dir  # Found the repo root
         current_dir = os.path.dirname(current_dir)  # Move up one level
 
-    logger.error("Repository root not found. Ensure you're running the script inside a valid project.")
-    raise RuntimeError("Repository root not found. Make sure you are running the script inside a valid project.")
-
+    logger.error(
+        "Repository root not found. Ensure you're running the script inside a valid project."
+    )
+    raise RuntimeError(
+        "Repository root not found. Make sure you are running the script inside a valid project."
+    )

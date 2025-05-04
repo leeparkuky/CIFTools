@@ -32,11 +32,15 @@ The collected data is then processed and potentially merged, organized by geogra
 3.  **Environment Variables:** Certain data sources require API keys or specific user agents/tokens. Create a `.env` file in the project's root directory and set the following environment variables. **All listed variables are necessary if you intend to collect data from the corresponding sources.**
     *   `CENSUS_API_KEY`: Your Census API key (Required for ACS data). Get one here.
     *   `BLS_USER_AGENT`: An email address or unique identifier for BLS API requests (Required for BLS data). Example: `your.email@example.com`.
-    *   `FCC_API_KEY`: Your FCC API key (Required for FCC Broadband data). *(You might need to specify the exact variable name if it's different, e.g., `FCC_AUTH_KEY`)*
-    *   `FCC_API_SECRET`: Your FCC API secret (Required for FCC Broadband data). *(You might need to specify the exact variable name if it's different)*
-    *   `SOCRATA_CDC_APP_TOKEN`: Your Socrata App Token for accessing CDC data APIs (Required for CDC PLACES and CDC SVI data). Get one by signing up on the respective data portal (e.g., data.cdc.gov).
+    *   `FCC_USERNAME`: Username for the FCC Broadband Map data (visit https://broadbandmap.fcc.gov/home)
+    *   `FCC_USER_AGENT`: FCC User agent for the FCC Broadband Map data 
+    *   `FCC_HASH_VALUE`: Has Value for the FCC Broadband Map data
+    *   `SOCRATA_APP_TOKEN`: Your Socrata App Token (Required for CDC PLACES and CDC SVI data). Get one by signing up on the respective data portal (e.g., [socrata](https://opendata.socrata.com/login)).
     *   `SOCRATA_CDC_USERNAME`: Your Socrata username (Required for CDC PLACES and CDC SVI data).
     *   `SOCRATA_CDC_PASSWORD`: Your Socrata password (Required for CDC PLACES and CDC SVI data).
+    *   `SOCRATA_CDC_COUNTY`: Socrata dataset id for cdc places in county level
+    *   `SOCRATA_CDC_TRACT`: Socrata dataset id for cdc places in tract level
+
 
 ## Configuration (YAML File)
 
@@ -54,7 +58,9 @@ area:
 # 2. Configure ACS Data Collection
 acs:
   # List the geographic levels ('county', 'tract')
-  query_level: [county, tract]
+  query_level: 
+    - county
+    - tract
   # Specify the ACS 5-Year estimate year
   acs_year: 2022
 
