@@ -1,51 +1,54 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
+# Temporary and binary files
+*~
 *.py[cod]
-*$py.class
-
-# C extensions
 *.so
-
-# Virtual environment
-venv/
-.env/
-
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Logs and databases
+*.cfg
+!.isort.cfg
+!setup.cfg
+*.orig
 *.log
-db.sqlite3
+*.pot
+__pycache__/*
+.cache/*
+.*.swp
+*/.ipynb_checkpoints/*
+.DS_Store
+.env
+# Project files
+.ropeproject
+.project
+.pydevproject
+.settings
+.idea
+.vscode
+tags
 
-# Python package files
-dist/
-build/
-*.egg-info/
+# Package files
+*.egg
+*.eggs/
+.installed.cfg
+*.egg-info
 
-# Coverage reports
+# Unittest and coverage
+htmlcov/*
 .coverage
-htmlcov/
-
-# MyPy type check reports
-.mypy_cache/
-
-# Pytest cache
+.coverage.*
+.tox
+junit*.xml
+coverage.xml
 .pytest_cache/
 
-# IDE/editor files
-.vscode/
-.idea/
-*.iml
+# Build and docs folder/files
+build/*
+dist/*
+sdist/*
+docs/api/*
+docs/_rst/*
+docs/_build/*
+cover/*
+MANIFEST
 
-# Environment variables
-.env
-*.env
-
-# Docker
-*.dockerignore
-
-# Miscellaneous
-*.swp
-*.swo
-.DS_Store
-Thumbs.db
+# Per-project virtualenvs
+.venv*/
+.conda*/
+.python-version

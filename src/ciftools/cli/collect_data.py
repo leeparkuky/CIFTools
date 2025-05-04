@@ -8,10 +8,9 @@ from glob import glob
 import joblib
 
 import fire
-from ..config.socrata_config import SocrataConfig
-from .config import read_yaml_config
-from ..utils.ciftools_logger import logger
-from ..utils.states import stateDf
+from ciftools.cli.config import read_yaml_config
+from ciftools.utils.ciftools_logger import logger
+from ciftools.utils.states import stateDf
 
 # %%
 dotenv.load_dotenv()
@@ -38,7 +37,7 @@ def check_ca_file(ca_file_path):
 
         # Search in the entire repository by going up to root directory
         repo_root = os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         )
         glob_result = glob(os.path.join(repo_root, "**", ca_file_path), recursive=True)
 
@@ -132,7 +131,7 @@ def fetch_data(config: dict):
 
         # --- ACS Data ---
         if dataname == "acs":
-            from ..cancer_in_focus_data.acs import acs_sdoh  # Local import
+            from ciftools.cancer_in_focus_data.acs import acs_sdoh  # Local import
 
             # Loop through specified query levels (e.g., 'county', 'tract')
             for query_level in config["acs"]["query_level"]:
@@ -154,7 +153,7 @@ def fetch_data(config: dict):
 
         # --- Facilities Data ---
         elif dataname == "facilities":
-            from ..cancer_in_focus_data.facilities import (
+            from ciftools.cancer_in_focus_data.facilities import (
                 gen_facility_data,
             )  # Local import
 
@@ -171,7 +170,7 @@ def fetch_data(config: dict):
 
         # --- State Cancer Profile Data ---
         elif dataname == "cancer":
-            from ..cancer_in_focus_data.state_cancer_profile import (
+            from ciftools.cancer_in_focus_data.state_cancer_profile import (
                 scp_cancer_data,
             )  # Local import
 
@@ -183,7 +182,7 @@ def fetch_data(config: dict):
 
         # --- Bureau of Labor Statistics (BLS) Unemployment Data ---
         elif dataname == "bls":
-            from ..cancer_in_focus_data.bls import BLS  # Local import
+            from ciftools.cancer_in_focus_data.bls import BLS  # Local import
 
             # Fetch BLS data (defaults to most recent)
             bls = BLS(state_fips=state_fips)
@@ -192,7 +191,9 @@ def fetch_data(config: dict):
 
         # --- Food Desert Data ---
         elif dataname == "food_desert":
-            from ..cancer_in_focus_data.food_deserts import FoodDesert  # Local import
+            from ciftools.cancer_in_focus_data.food_deserts import (
+                FoodDesert,
+            )  # Local import
 
             # Fetch food desert data
             food_desert = FoodDesert(state_fips=state_fips)
@@ -205,7 +206,9 @@ def fetch_data(config: dict):
 
         # --- FCC Broadband Availability Data ---
         elif dataname == "fcc":
-            from ..cancer_in_focus_data.fcc import FCCAvailability  # Local import
+            from ciftools.cancer_in_focus_data.fcc import (
+                FCCAvailability,
+            )  # Local import
 
             # Fetch FCC data
             fcc_availability = FCCAvailability(state_fips=state_fips)
@@ -215,7 +218,7 @@ def fetch_data(config: dict):
 
         # --- Urban/Rural Classification Data ---
         elif dataname == "urban_rural":
-            from ..cancer_in_focus_data.urban_rural import (
+            from ciftools.cancer_in_focus_data.urban_rural import (
                 urban_rural_counties,
             )  # Local import
 
@@ -226,7 +229,7 @@ def fetch_data(config: dict):
 
         # --- EPA EJScreen Data ---
         elif dataname == "ejscreen":
-            from ..cancer_in_focus_data.ejscreen import EJScreen  # Local import
+            from ciftools.cancer_in_focus_data.ejscreen import EJScreen  # Local import
 
             # Fetch EJScreen data
             ejscreen = EJScreen(state_fips=state_fips)
@@ -238,8 +241,12 @@ def fetch_data(config: dict):
 
         # --- CDC PLACES Data ---
         elif dataname == "cdc_places":
-            from ..cancer_in_focus_data.cdc_places import places_data  # Local import
-            from ..config.socrata_config import SocrataConfig  # Local import for config
+            from ciftools.cancer_in_focus_data.cdc_places import (
+                places_data,
+            )  # Local import
+            from ciftools.config.socrata_config import (
+                SocrataConfig,
+            )  # Local import for config
 
             # Configure Socrata API access
             socrata_config = SocrataConfig(
@@ -260,7 +267,7 @@ def fetch_data(config: dict):
 
         # --- CDC Social Vulnerability Index (SVI) Data ---
         elif dataname == "cdc_svi":
-            from ..cancer_in_focus_data.cdc_svi import svi_data  # Local import
+            from ciftools.cancer_in_focus_data.cdc_svi import svi_data  # Local import
 
             # Fetch SVI data
             svi = svi_data(state_fips=state_fips)
@@ -302,6 +309,17 @@ def main(config: str):
     )  # Ensure the file has a .pickle extension
     joblib.dump(output_data, output_file_path)
     logger.info(f"Data collected and saved to {output_file_path}")
+
+
+def run():
+    """Calls :func:`main` passing the CLI arguments extracted from :obj:`sys.argv`
+    This function can be used as entry point to create console scripts with setuptools.
+    """
+    file_path = input(
+        "What is the path to your config file? (e.g., ../../example_config/kentucky.yaml)"
+    )
+    main(file_path)  # Pass all command
+    # example usage: ciftools collect --config_path ../../example_config/kentucky.yaml
 
 
 if __name__ == "__main__":
