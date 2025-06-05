@@ -18,6 +18,19 @@ from ..utils.ciftools_logger import logger
 
 @dataclass
 class acs_sdoh:
+    """
+    A class to download, process, and manage ACS SDoH data.
+
+    Attributes:
+        year (int): The year for the ACS data.
+            Warning: While this class accepts a 'year' parameter, the data processing logic
+            (variable names and calculations) is specifically tailored for ACS 5-year estimates
+            from 2019-2023. Using years outside this range may lead to errors or incorrect
+            results due to potential changes in ACS variable definitions or availability.
+        state_fips (Union[str, int]): The FIPS code of the state.
+        query_level (str): The geographic level for the query (e.g., 'county', 'tract').
+        key (str): The Census API key.
+    """
     year: int
     state_fips: Union[str, int]
     query_level: str

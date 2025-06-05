@@ -280,7 +280,7 @@ def write_excel_file(cdata, full_path, full_path2):
     
     return
 
-def save_as_csvs(cdata, path2):
+def save_as_csvs(ca_name_param, cdata, target_path, current_day_str): # Renamed parameters for clarity
     cdata_keys = ['rf_and_screening_county', 'rf_and_screening_county_long', 
                   'rf_and_screening_tract', 'rf_and_screening_tract_long', 
                   'svi_county', 'svi_county_long', 
@@ -300,40 +300,39 @@ def save_as_csvs(cdata, path2):
     for name in cdata.keys():
         assert name in cdata_keys
 
-    os.chdir(path2)
-
-    cdata['cancer_incidence'].to_csv(ca_name + '_cancer_incidence_county_' + today + '.csv', encoding='utf-8', index=True)
-    cdata['cancer_mortality'].to_csv(ca_name + '_cancer_mortality_county_' + today + '.csv', encoding='utf-8', index=True)
-    cdata['cancer_incidence_long'].to_csv(ca_name + '_cancer_incidence_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['cancer_mortality_long'].to_csv(ca_name + '_cancer_mortality_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['economy_county'].to_csv(ca_name + '_economy_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['economy_county_long'].to_csv(ca_name + '_economy_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['economy_tract'].to_csv(ca_name + '_economy_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['economy_tract_long'].to_csv(ca_name + '_economy_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['environment_county'].to_csv(ca_name + '_environment_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['environment_county_long'].to_csv(ca_name + '_environment_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['environment_tract'].to_csv(ca_name + '_environment_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['environment_tract_long'].to_csv(ca_name + '_environment_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['food_desert_tract'].to_csv(ca_name + '_food_desert_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['food_desert_tract_long'].to_csv(ca_name + '_food_desert_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['ht_county'].to_csv(ca_name + '_housing_trans_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['ht_county_long'].to_csv(ca_name + '_housing_trans_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['ht_tract'].to_csv(ca_name + '_housing_trans_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['ht_tract_long'].to_csv(ca_name + '_housing_trans_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['rf_and_screening_county'].to_csv(ca_name + '_rf_and_screening_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['rf_and_screening_tract'].to_csv(ca_name + '_rf_and_screening_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['rf_and_screening_county_long'].to_csv(ca_name + '_rf_and_screening_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['rf_and_screening_tract_long'].to_csv(ca_name + '_rf_and_screening_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['svi_county'].to_csv(ca_name + '_svi_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['svi_tract'].to_csv(ca_name + '_svi_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['svi_county_long'].to_csv(ca_name + '_svi_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['svi_tract_long'].to_csv(ca_name + '_svi_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['sociodemographics_county'].to_csv(ca_name + '_sociodemographics_county_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['sd_county_long'].to_csv(ca_name + '_sociodemographics_county_long_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['sociodemographics_tract'].to_csv(ca_name + '_sociodemographics_tract_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['sd_tract_long'].to_csv(ca_name + '_sociodemographics_tract_long_' + today + '.csv', encoding='utf-8', index=False)
-#     cdata['broadband_speeds'].to_csv(ca_name + '_broadband_speeds_' + today + '.csv', encoding='utf-8', index=False)
-    cdata['facilities_and_providers'].to_csv(ca_name + '_facilities_and_providers_' + today + '.csv', encoding='utf-8', index=False)
+    # Avoid changing directory globally, use os.path.join to construct full paths
+    cdata['cancer_incidence'].to_csv(os.path.join(target_path, ca_name_param + '_cancer_incidence_county_' + current_day_str + '.csv'), encoding='utf-8', index=True)
+    cdata['cancer_mortality'].to_csv(os.path.join(target_path, ca_name_param + '_cancer_mortality_county_' + current_day_str + '.csv'), encoding='utf-8', index=True)
+    cdata['cancer_incidence_long'].to_csv(os.path.join(target_path, ca_name_param + '_cancer_incidence_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['cancer_mortality_long'].to_csv(os.path.join(target_path, ca_name_param + '_cancer_mortality_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['economy_county'].to_csv(os.path.join(target_path, ca_name_param + '_economy_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['economy_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_economy_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['economy_tract'].to_csv(os.path.join(target_path, ca_name_param + '_economy_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['economy_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_economy_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['environment_county'].to_csv(os.path.join(target_path, ca_name_param + '_environment_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['environment_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_environment_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['environment_tract'].to_csv(os.path.join(target_path, ca_name_param + '_environment_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['environment_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_environment_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['food_desert_tract'].to_csv(os.path.join(target_path, ca_name_param + '_food_desert_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['food_desert_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_food_desert_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['ht_county'].to_csv(os.path.join(target_path, ca_name_param + '_housing_trans_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['ht_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_housing_trans_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['ht_tract'].to_csv(os.path.join(target_path, ca_name_param + '_housing_trans_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['ht_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_housing_trans_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['rf_and_screening_county'].to_csv(os.path.join(target_path, ca_name_param + '_rf_and_screening_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['rf_and_screening_tract'].to_csv(os.path.join(target_path, ca_name_param + '_rf_and_screening_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['rf_and_screening_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_rf_and_screening_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['rf_and_screening_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_rf_and_screening_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['svi_county'].to_csv(os.path.join(target_path, ca_name_param + '_svi_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['svi_tract'].to_csv(os.path.join(target_path, ca_name_param + '_svi_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['svi_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_svi_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['svi_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_svi_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['sociodemographics_county'].to_csv(os.path.join(target_path, ca_name_param + '_sociodemographics_county_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['sd_county_long'].to_csv(os.path.join(target_path, ca_name_param + '_sociodemographics_county_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['sociodemographics_tract'].to_csv(os.path.join(target_path, ca_name_param + '_sociodemographics_tract_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['sd_tract_long'].to_csv(os.path.join(target_path, ca_name_param + '_sociodemographics_tract_long_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+#     cdata['broadband_speeds'].to_csv(os.path.join(target_path, ca_name_param + '_broadband_speeds_' + current_day_str + '.csv'), encoding='utf-8', index=False)
+    cdata['facilities_and_providers'].to_csv(os.path.join(target_path, ca_name_param + '_facilities_and_providers_' + current_day_str + '.csv'), encoding='utf-8', index=False)
 
 
 
@@ -348,7 +347,7 @@ if __name__ == '__main__':
     from tqdm import tqdm
     from glob import glob
     import time
-    import os
+    import os # Imported os module
     
 
     
@@ -370,33 +369,35 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     
-    ca_name = args.ca_name # args.cs_name will be used to create a folder to store cleaned data in a selected format
-    ca_dir = args.ca_name.replace(" ", "_") + "_catchment_data"
-    path2 = os.path.join(os.getcwd(), ca_dir)
+    # Derive base_ca_filename from args.ca_file_path
+    base_ca_filename = os.path.splitext(os.path.basename(args.ca_file_path))[0]
 
-    if os.path.exists(path2) == False:
+    # Use args.ca_name for the directory name, but base_ca_filename for actual file names
+    ca_dir_folder_name = args.ca_name.replace(" ", "_") + "_catchment_data"
+    path2 = os.path.join(os.getcwd(), ca_dir_folder_name)
+
+    if not os.path.exists(path2): # Simplified condition
         os.makedirs(path2) # if the folder has not yet been created, we create the folder
 
     pbar = tqdm(range(5), desc = "Transforming data to generate files for Cancer InFocus", leave = False)
     time.sleep(2)
     pbar.set_description("reading pickle data from CIF_Tool")
 
-        
+    today = dt.today().strftime('%m-%d-%Y') # Define today here as it's used by all file types
         
         
     if 'pickle' in args.download_file_type: # if pickle is the selected file format, we set the dataset name with pickle ext
-        save_name = ca_name.replace(" ", "_") + '_catchment_data_' + dt.today().strftime('%m-%d-%Y') + '.pickle'
-        save_name_spatial = ca_name.replace(" ", "_") + '_catchment_data_spatial_' + dt.today().strftime('%m-%d-%Y') + '.pickle'
+        save_name = base_ca_filename + '_catchment_data_' + today + '.pickle'
+        save_name_spatial = base_ca_filename + '_catchment_data_spatial_' + today + '.pickle'
         pickle_download_path = os.path.join(path2, save_name)
         pickle_download_path_spatial = os.path.join(path2, save_name_spatial)
 
     if 'excel' in args.download_file_type: # the same goes with excel, but it will create two separate excel files
-        save_name = ca_name.replace(" ", "_") + '_catchment_data_' + dt.today().strftime('%m-%d-%Y') + '.xlsx'
-        save_name2 = ca_name.replace(" ", "_") + '_catchment_data_long_' + dt.today().strftime('%m-%d-%Y') + '.xlsx'
-        full_path = os.path.join(os.getcwd(), ca_dir, save_name)
-        full_path2 = os.path.join(os.getcwd(), ca_dir, save_name2)
-    if 'csv' in args.download_file_type: # if csv is chosen, it will create csvs by pandas DataFrame
-        today = dt.today().strftime('%m-%d-%Y')
+        save_name = base_ca_filename + '_catchment_data_' + today + '.xlsx'
+        save_name2 = base_ca_filename + '_catchment_data_long_' + today + '.xlsx'
+        full_path = os.path.join(path2, save_name) # Use path2 for consistency
+        full_path2 = os.path.join(path2, save_name2) # Use path2 for consistency
+    # 'csv' specific 'today' is already defined above and used in save_as_csvs
 
         
         
@@ -670,7 +671,7 @@ if __name__ == '__main__':
         pbar.update(1)
 
     if 'csv' in args.download_file_type:
-        save_as_csvs(cdata, path2)
+        save_as_csvs(base_ca_filename, cdata, path2, today) # Pass base_ca_filename and today
         pbar.update(1)
         pbar.set_description("csv file is saved")
     else:

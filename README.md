@@ -29,17 +29,32 @@ The collected data is then processed and potentially merged, organized by geogra
     # pip install -r requirements.txt
     ```
     *Note: You might need to install `openpyxl` specifically if not included: `pip install openpyxl`*
-3.  **Environment Variables:** Certain data sources require API keys or specific user agents/tokens. Create a `.env` file in the project's root directory and set the following environment variables. **All listed variables are necessary if you intend to collect data from the corresponding sources.**
-    *   `CENSUS_API_KEY`: Your Census API key (Required for ACS data). Get one here.
-    *   `BLS_USER_AGENT`: An email address or unique identifier for BLS API requests (Required for BLS data). Example: `your.email@example.com`.
-    *   `FCC_USERNAME`: Username for the FCC Broadband Map data (visit https://broadbandmap.fcc.gov/home)
-    *   `FCC_USER_AGENT`: FCC User agent for the FCC Broadband Map data 
-    *   `FCC_HASH_VALUE`: Has Value for the FCC Broadband Map data
-    *   `SOCRATA_APP_TOKEN`: Your Socrata App Token (Required for CDC PLACES and CDC SVI data). Get one by signing up on the respective data portal (e.g., [socrata](https://opendata.socrata.com/login)).
-    *   `SOCRATA_CDC_USERNAME`: Your Socrata username (Required for CDC PLACES and CDC SVI data).
-    *   `SOCRATA_CDC_PASSWORD`: Your Socrata password (Required for CDC PLACES and CDC SVI data).
-    *   `SOCRATA_CDC_COUNTY`: Socrata dataset id for cdc places in county level
-    *   `SOCRATA_CDC_TRACT`: Socrata dataset id for cdc places in tract level
+
+## Environment Variables
+
+CIFTools relies on environment variables for configuration, especially for accessing external APIs and customizing data source locations. These variables are typically defined in a `.env` file located in the project's root directory or in the directory specified by the `CIFTOOLS_ENV_PATH` variable.
+
+**All listed variables under specific data sources are necessary if you intend to collect data from those sources.**
+
+### General Configuration
+*   `CIFTOOLS_ENV_PATH`: Specifies the path to the `.env` file. If not set, the tool defaults to looking for a file named `.env` in the current working directory.
+
+### Socrata API (Used for CDC PLACES, CDC SVI)
+*   `SOCRATA_DOMAIN`: The domain for the Socrata API. Defaults to `chronicdata.cdc.gov` if not set.
+*   `SOCRATA_APP_TOKEN`: Your Socrata Application Token. This is required for accessing data from Socrata-powered portals (e.g., CDC PLACES, CDC SVI). You can usually obtain a token by signing up on the respective data portal.
+*   `SOCRATA_USER_NAME`: (Optional) Your Socrata username, used for authentication if the dataset requires it.
+*   `SOCRATA_PASSWORD`: (Optional) Your Socrata password, used for authentication if the dataset requires it.
+*   `SOCRATA_CDC_COUNTY`: The Socrata dataset identifier for CDC PLACES county-level data.
+*   `SOCRATA_CDC_TRACT`: The Socrata dataset identifier for CDC PLACES tract-level data.
+
+### FCC Broadband API
+*   `FCC_USERNAME`: Username for accessing the FCC Broadband Map data. Visit [FCC Broadband Map](https://broadbandmap.fcc.gov/home) for details.
+*   `FCC_USER_AGENT`: A user agent string for FCC Broadband API requests. This can typically be an email address or other unique identifier.
+*   `FCC_HASH_VALUE`: A hash value required for certain FCC Broadband API requests.
+
+### Other Data Sources
+*   `CENSUS_API_KEY`: Your Census API key (Required for ACS data). Get one [here](https://api.census.gov/data/key_signup.html).
+*   `BLS_USER_AGENT`: An email address or unique identifier for BLS API requests (Required for BLS data). Example: `your.email@example.com`.
 
 
 ## Configuration (YAML File)
@@ -63,6 +78,11 @@ acs:
     - tract
   # Specify the ACS 5-Year estimate year
   acs_year: 2022
+  # IMPORTANT NOTE: The ACS data processing logic (variable names, calculations) within CIFTools
+  # is currently tailored for ACS 5-year estimates from 2019-2023.
+  # While you can specify other years, doing so may result in errors or inaccurate data
+  # due to changes in ACS variable definitions or availability across different ACS releases.
+  # Please exercise caution and verify results if using years outside the 2019-2023 range.
 
 # 3. Configure Facility Data Collection
 facilities:

@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 from sodapy import Socrata
 
 # Load environment variables
-load_dotenv("/root/CIFTools/.env")
+# Allow overriding the .env path with CIFTOOLS_ENV_PATH, default to .env
+dotenv_path = os.getenv("CIFTOOLS_ENV_PATH", ".env")
+load_dotenv(dotenv_path)
 
 
 @dataclass

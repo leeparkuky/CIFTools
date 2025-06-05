@@ -114,10 +114,15 @@ def gen_facility_data(
     for name, df in zip(dataset_names, datasets):
         data_dict[name] = df
 
-    data_dict["all"] = pd.concat(
-        [df for df in data_dict.values() if isinstance(df, pd.DataFrame)],
-        ignore_index=True,
-    )
+    dfs_to_concat = [df for df in data_dict.values() if isinstance(df, pd.DataFrame)]
+    if not dfs_to_concat:
+        logger.info("No valid facility dataframes to concatenate in data_dict['all'], resulting in empty data.")
+        data_dict["all"] = pd.DataFrame()
+    else:
+        data_dict["all"] = pd.concat(
+            dfs_to_concat,
+            ignore_index=True,
+        )
     data_dict["all"] = data_dict["all"].reset_index(drop=True)
     return data_dict
 
@@ -460,16 +465,16 @@ def superfund(location: Union[str, List[str]]) -> Optional[pd.DataFrame]:
                     if len(state_abbrev) > 0:
                         return state_abbrev[0]
                     else:
-                        logger.warning(f"FIPS code '{loc_input}' not found in stateDf.")
+                        logger.warning(f"Invalid location format or FIPS code '{loc_input}' not found. Skipping.")
                         return None
                 except Exception as e:
                     logger.warning(f"Error looking up FIPS code '{loc_input}': {e}")
                     return None
             else:
-                logger.warning(f"Invalid location format '{loc_input}'. Skipping.")
+                logger.warning(f"Invalid location format or FIPS code '{loc_input}' not found. Skipping.")
                 return None
         else:
-            logger.warning(f"Invalid location type '{type(loc_input)}'. Skipping.")
+            logger.warning(f"Invalid location format or FIPS code '{loc_input}' not found. Skipping.")
             return None
 
     # --- Process single location ---
@@ -495,11 +500,13 @@ def superfund(location: Union[str, List[str]]) -> Optional[pd.DataFrame]:
         )
         return None
 
+    logger.info(f"Processing superfund data for state codes: {state_codes}")
+
     # --- Fetch data (sequentially for one, parallel for multiple) ---
     if len(state_codes) == 1:
         df = gen_single_superfund(state_codes[0])
     else:
-        logger.info(f"Fetching superfund data in parallel for: {state_codes}")
+        # logger.info(f"Fetching superfund data in parallel for: {state_codes}") # Already logged above
         # Use threading backend for I/O-bound tasks like network requests
         datasets = Parallel(n_jobs=-1, backend="threading")(
             delayed(gen_single_superfund)(code)
@@ -509,7 +516,7 @@ def superfund(location: Union[str, List[str]]) -> Optional[pd.DataFrame]:
         # Filter out None results (from errors) and concatenate
         valid_datasets = [d for d in datasets if d is not None and not d.empty]
         if not valid_datasets:
-            logger.info("No superfund data successfully retrieved for any location.")
+            logger.info("No valid superfund datasets collected, returning None.")
             return None
         df = pd.concat(valid_datasets, ignore_index=True)
 

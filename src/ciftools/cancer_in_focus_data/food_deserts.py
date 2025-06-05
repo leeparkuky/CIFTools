@@ -99,28 +99,25 @@ class FoodDesert:
         total_size = int(response.headers.get("content-length", 0))
         chunk_size = 1024 * 1024  # 1 MB chunks
 
-        with NamedTemporaryFile(delete=True, suffix=".xlsx") as temp_file:
-            temp_filename = temp_file.name
-            with (
-                open(temp_filename, "wb") as file,
-                tqdm(
-                    desc="Downloading food desert data file",
-                    total=total_size,
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                    leave=True,
-                ) as bar,
-            ):
+        with NamedTemporaryFile(delete=True, suffix=".xlsx") as temp_file_obj:
+            with tqdm(
+                desc="Downloading food desert data file",
+                total=total_size,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                leave=True,
+            ) as bar:
                 for chunk in response.iter_content(chunk_size=chunk_size):
-                    file.write(chunk)
+                    temp_file_obj.write(chunk)
                     bar.update(len(chunk))
 
+            temp_file_obj.flush() # Ensure all data is written to disk
             logger.info("Download complete. Processing dataset...")
 
             # Read dataset (assuming sheet index 2 contains the data)
             df = pd.read_excel(
-                temp_filename,
+                temp_file_obj.name, # Use the name attribute of the temp file object
                 engine="openpyxl",
                 sheet_name=2,
                 dtype={"CensusTract": str},
